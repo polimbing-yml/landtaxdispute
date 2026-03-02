@@ -1,1 +1,140 @@
 @import "tailwindcss";
+/* ─── Google Fonts ─────────────────────────────────────────────────────────
+   Loaded here so Main_Content.jsx has no <style> tag or inline @import.
+   ───────────────────────────────────────────────────────────────────────── */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,700&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500;600&display=swap');
+
+/* ─── Font Family Utilities ─────────────────────────────────────────────────
+   Tailwind's font-serif / font-mono / font-sans map to system stacks by
+   default. Overriding them here to our custom faces keeps className usage
+   identical to the original code without a tailwind.config.js change.
+   ───────────────────────────────────────────────────────────────────────── */
+.font-serif { font-family: 'Playfair Display', serif; }
+.font-mono  { font-family: 'DM Mono', monospace; }
+.font-sans  { font-family: 'DM Sans', sans-serif; }
+
+/* ─── Keyframe Definitions ──────────────────────────────────────────────────
+   @keyframes cannot be authored inside a Tailwind class — they must live in
+   a stylesheet.
+   ───────────────────────────────────────────────────────────────────────── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(22px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ─── Animation Utility Classes ─────────────────────────────────────────────
+   Tailwind's animate-[...] arbitrary syntax is compile-time only and cannot
+   reference locally-defined @keyframes at runtime in most setups. These
+   named classes are the clean, predictable alternative.
+   ───────────────────────────────────────────────────────────────────────── */
+.animate-fade-up {
+  animation: fadeUp 0.7s ease both;
+}
+
+.animate-fade-up-delayed {
+  animation: fadeUp 0.7s 0.15s ease both;
+}
+
+.animate-fade-up-success {
+  animation: fadeUp 0.5s ease both;
+}
+
+/* ─── Radial Background Glow ────────────────────────────────────────────────
+   Two stacked radial-gradient() layers on a single background property.
+   Tailwind's bg-[radial-gradient(...)] arbitrary value supports only ONE
+   gradient layer — stacking two requires plain CSS.
+   ───────────────────────────────────────────────────────────────────────── */
+.bg-radial-glow {
+  background:
+    radial-gradient(ellipse at 20% 20%, rgba(201, 168, 76, 0.07) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 80%, rgba(201, 168, 76, 0.05) 0%, transparent 50%);
+}
+
+/* ─── Gold Top Accent Line ──────────────────────────────────────────────────
+   A decorative bar whose fill is a linear-gradient. Tailwind can gradient a
+   background on a full element but cannot apply a gradient to a border, and
+   using a background-gradient on the bar element itself is the intended
+   pattern here.
+   ───────────────────────────────────────────────────────────────────────── */
+.gold-top-line {
+  background: linear-gradient(90deg, transparent, #c9a84c, transparent);
+}
+
+/* ─── Submit Button Gradient ────────────────────────────────────────────────
+   Tailwind's directional gradient helpers (bg-gradient-to-br etc.) do not
+   accept degree-based angles. The 135deg angle here is intentional design.
+   ───────────────────────────────────────────────────────────────────────── */
+.btn-gold-gradient {
+  background: linear-gradient(135deg, #c9a84c, #e8c878);
+}
+
+/* ─── Select Arrow ──────────────────────────────────────────────────────────
+   Custom chevron injected via background-image + background-position on the
+   <select> element. Tailwind has no utility for background-image SVG data
+   URIs combined with background-position overrides.
+   ───────────────────────────────────────────────────────────────────────── */
+.select-arrow {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23c9a84c' stroke-width='2' stroke-linecap='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 36px !important;
+}
+
+/* ─── Select Option Background ──────────────────────────────────────────────
+   Browser-native pseudo-element — no Tailwind equivalent exists.
+   ───────────────────────────────────────────────────────────────────────── */
+select option {
+  background: #0d1b2a;
+  color: white;
+}
+
+/* ─── Global Body Background ────────────────────────────────────────────────
+   Ensures the page background matches the app shell even before React mounts.
+   ───────────────────────────────────────────────────────────────────────── */
+body {
+  background: #0d1b2a;
+}
+
+/* ─── Modal Animations ──────────────────────────────────────────────────────
+   The success modal uses two coordinated animations:
+   - Backdrop fades in (opacity 0 → 1) with a blurred dark overlay
+   - Panel scales + fades up from slightly below center
+   Both are triggered when the modal mounts (no JS class toggling needed).
+   ───────────────────────────────────────────────────────────────────────── */
+@keyframes modalBackdrop {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes modalPanel {
+  from { opacity: 0; transform: translateY(16px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0)    scale(1); }
+}
+
+.animate-modal-backdrop {
+  background: rgba(8, 16, 26, 0.75);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  animation: modalBackdrop 0.2s ease both;
+}
+
+.animate-modal-panel {
+  animation: modalPanel 0.25s 0.05s cubic-bezier(0.34, 1.2, 0.64, 1) both;
+}
+
+/* ─── Hide Scrollbar Utility ────────────────────────────────────────────────
+   Tailwind does not ship a scrollbar-hide utility by default.
+   Applied to the modal panel to suppress any residual scrollbar chrome
+   while still allowing content to be scrollable if needed on small screens.
+   ───────────────────────────────────────────────────────────────────────── */
+.scrollbar-hide {
+  -ms-overflow-style: none;  /* IE / Edge */
+  scrollbar-width: none;     /* Firefox */
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;             /* Chrome / Safari / Opera */
+}

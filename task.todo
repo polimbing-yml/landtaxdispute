@@ -1,0 +1,17 @@
+files
+-navigation
+-main content
+-footer
+
+
+form validation use formik
+for design use tailwind
+
+form validation requirements
+- make all input required
+- email
+- year dropdown(create a logic)
+
+
+- button validation
+  - disable when requirements does not meet

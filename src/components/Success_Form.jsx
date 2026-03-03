@@ -37,7 +37,7 @@ export default function Success_Form({ refNumber, reasons, dirName, dirEmail, on
       <div className="modal-panel" onClick={(e) => e.stopPropagation()}>
 
         {/* Gold top accent line — .gold-top-line defined in index.css */}
-        <div className="absolute top-0 left-0 right-0 h-[2px] rounded-t-[20px] gold-top-line" />
+        <div className="absolute top-0 left-0 right-0 h-0.5 rounded-t-[20px] gold-top-line" />
 
         {/* X Close button — CloseIcon from src/assets/icons */}
         <button onClick={onClose} className="modal-close-btn" aria-label="Close modal">
@@ -81,7 +81,7 @@ export default function Success_Form({ refNumber, reasons, dirName, dirEmail, on
                 className={`py-0.5 relative leading-relaxed ${
                   r.sub
                     ? "text-[#8a9bb0] text-xs pl-8"
-                    : "text-[13px] text-[#faf8f3] pl-[18px]"
+                    : "text-[13px] text-[#faf8f3] pl-4.5"
                 }`}
               >
                 <span className="absolute left-0 text-[#c9a84c] text-[11px]">

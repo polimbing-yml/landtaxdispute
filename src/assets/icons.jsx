@@ -117,7 +117,7 @@ export const MailIcon = () => (
 export const InfoIcon = () => (
   <svg
     viewBox="0 0 24 24"
-    className="w-4 h-4 flex-shrink-0"
+    className="w-4 h-4 shrink-0"
     stroke="#c9a84c"
     strokeWidth="1.8"
     fill="none"

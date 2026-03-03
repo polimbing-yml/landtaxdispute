@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80">
+  <circle cx="40" cy="40" r="35" stroke="rgba(42,157,92,0.15)" stroke-width="2" fill="rgba(42,157,92,0.06)"/>
+  <circle cx="40" cy="40" r="35" stroke="#2a9d5c" stroke-width="2" fill="none" stroke-dasharray="220" stroke-dashoffset="0" transform="rotate(-90 40 40)"/>
+  <polyline points="25,40 35,52 55,30" stroke="#2a9d5c" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

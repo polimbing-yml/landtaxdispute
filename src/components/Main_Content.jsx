@@ -141,7 +141,7 @@ const SuccessModal = ({ refNumber, reasons, dirName, dirEmail, onClose }) => (
             <li
               key={i}
               className={`py-0.5 relative leading-relaxed ${
-                r.sub ? "text-[#8a9bb0] text-xs pl-8" : "text-[13px] text-[#faf8f3] pl-[18px]"
+                r.sub ? "text-[#8a9bb0] text-xs pl-8" : "text-[13px] text-[#faf8f3] pl-4.5"
               }`}
             >
               <span className="absolute left-0 text-[#c9a84c] text-[11px]">
@@ -309,7 +309,7 @@ export default function Main_Content() {
           <div className="form-card">
 
             {/* Gold accent bar — .gold-top-line in index.css */}
-            <div className="absolute top-0 left-0 right-0 h-[2px] gold-top-line" />
+            <div className="absolute top-0 left-0 right-0 h-0.5 gold-top-line" />
 
             <form onSubmit={formik.handleSubmit} noValidate>
 

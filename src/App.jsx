@@ -1,6 +1,7 @@
 import Footer from "./components/Footer"
 import Navigation from "./components/Navigation"
-import Main_Content from "./components/Main_Content"
+import MainContent from "./pages/MainContent"
+
 
 
 function App() {
@@ -9,7 +10,7 @@ function App() {
     <>
      <div className="">
 <Navigation/>
-<Main_Content/>
+<MainContent/>
 <Footer/>
      </div>
     </>

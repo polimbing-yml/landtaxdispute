@@ -2,7 +2,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 export const disputeApi = createApi({
   reducerPath: "disputeApi",
-  baseQuery: fetchBaseQuery({ baseUrl: "https://localhost:7028/api/" }),
+  baseQuery: fetchBaseQuery({ baseUrl:`${import.meta.env.VITE_API_URL}/api` }),
   endpoints: (builder) => ({
     submitDispute: builder.mutation({
       query: (formData) => ({

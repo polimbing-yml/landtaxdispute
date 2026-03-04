@@ -4,7 +4,7 @@ import { useDisputeForm } from "../hooks/useDisputeForm";
 import { years } from "../constants/years";
 import { PRIMARY_REASONS, SUB_CONSTRAINTS } from "../constants/reasons";
 
-import Dropzone from "../components/Dropzone";
+
 import FilePreview from "../components/FilePreview";
 import Divider from "../components/Divider";
 import FieldWrapper from "../components/FieldWrapper";
@@ -12,6 +12,7 @@ import Checkbox from "../components/Checkbox";
 import Success_Form from "../components/Success_Form";
 
 import { InfoIcon, SendIcon } from "../assets/icons";
+import DropZone from "../components/DropZone";
 
 
 export default function MainContent() {
@@ -96,7 +97,7 @@ export default function MainContent() {
             <form onSubmit={formik.handleSubmit} noValidate>
 
               {/* Dropzone */}
-              <Dropzone
+              <DropZone
                 dragOver={dragOver}
                 setDragOver={setDragOver}
                 handleFileSelect={handleFileSelect}

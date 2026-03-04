@@ -1,7 +1,7 @@
 // src/components/Dropzone.jsx
 import { UploadIcon } from "../assets/icons";
 
-export default function Dropzone({ dragOver, setDragOver, handleFileSelect }) {
+export default function DropZone({ dragOver, setDragOver, handleFileSelect }) {
   return (
     <div
       className={`dropzone${dragOver ? " dropzone--active" : ""}`}

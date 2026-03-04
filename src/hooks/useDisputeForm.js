@@ -4,11 +4,9 @@ import { PRIMARY_REASONS, SUB_CONSTRAINTS } from "../constants/reasons";
 import { CURRENT_YEAR } from "../constants/years";
 import { useSubmitDisputeMutation } from "../store/disputeApi";
 
-// `file` is passed here for future extension (e.g. appending as FormData) but not used
-// by the current JSON-based API.  `onSuccess` is an optional callback that will be
-// invoked after a successful server response.  MainContent uses it to populate the
-// modal state with a nicely formatted object including the reference number returned
-// by the backend.
+// `file` is passed to build FormData with the uploaded PDF.  `onSuccess` is an optional
+// callback that will be invoked after a successful server response.  MainContent uses it
+// to populate the modal state with the reference number returned by the backend.
 export const useDisputeForm = (file, onSuccess) => {
   const [submitDispute] = useSubmitDisputeMutation();
 
@@ -28,29 +26,33 @@ export const useDisputeForm = (file, onSuccess) => {
     validationSchema: disputeSchema,
     validateOnMount: true,
     onSubmit: async (values) => {
-      // build payload exactly as the API expects
-      const payload = {
-        applicantFullName: values.fullName,
-        applicantEmail: values.email,
-        directorName: values.dirName,
-        directorEmail: values.dirEmail,
-        propertyAddress: values.propAddress,
-        assessmentYear: values.assessYearTo,
-        additionalNotes: values.addNotes,
-        grounds: values.reasons.map((r) => {
-          const primary = PRIMARY_REASONS.find((p) => p.id === r);
-          return primary ? primary.value : r;
-        }),
-        constraints: values.subConstraints.map((sc) => {
-          const c = SUB_CONSTRAINTS.find((x) => x.id === sc);
-          return c ? c.value : sc;
-        }),
-      };
+      // build FormData with field names matching the backend schema
+      const formData = new FormData();
+      formData.append("ApplicantFullName", values.fullName);
+      formData.append("ApplicantEmail", values.email);
+      formData.append("PropertyAddress", values.propAddress);
+      formData.append("DirectorName", values.dirName);
+      formData.append("DirectorEmail", values.dirEmail);
+      formData.append("AssessmentYearFrom", String(values.assessYearFrom));
+      formData.append("AssessmentYearTo", String(values.assessYearTo));
+      formData.append("AdditionalNotes", values.addNotes || "");
 
-      console.log("Payload being sent:", payload);
+      // append grounds as array items
+      const groundsValues = values.reasons.map((r) => {
+        const primary = PRIMARY_REASONS.find((p) => p.id === r);
+        return primary ? primary.value : r;
+      });
+      groundsValues.forEach((g) => formData.append("Grounds", g));
+
+      // append file if selected
+      if (file) {
+        formData.append("SupportingDocument", file);
+      }
+
+      console.log("FormData being sent");
 
       try {
-        const result = await submitDispute(payload).unwrap();
+        const result = await submitDispute(formData).unwrap();
         console.log("Server response:", result);
 
         // call the optional success callback with data for the UI
@@ -76,7 +78,7 @@ export const useDisputeForm = (file, onSuccess) => {
             dirEmail: values.dirEmail,
           };
 
-          onSuccess(uiData, payload, result);
+          onSuccess(uiData, formData, result);
         }
       } catch (err) {
         console.error("Submission failed:", err);

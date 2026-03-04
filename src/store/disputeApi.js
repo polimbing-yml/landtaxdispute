@@ -5,11 +5,12 @@ export const disputeApi = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: "https://localhost:7028/api/" }),
   endpoints: (builder) => ({
     submitDispute: builder.mutation({
-      query: (payload) => ({
+      query: (formData) => ({
         url: "dispute-submission",
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: payload,
+        // DO NOT set Content-Type header; let the browser set it automatically
+        // for multipart/form-data when FormData is used
+        body: formData,
       }),
     }),
   }),

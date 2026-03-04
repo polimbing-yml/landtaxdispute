@@ -13,21 +13,26 @@ import Success_Form from "../components/Success_Form";
 
 import { InfoIcon, SendIcon } from "../assets/icons";
 
+
 export default function MainContent() {
   const [file, setFile] = useState(null);
   const [dragOver, setDragOver] = useState(false);
   const [subPanelOpen, setSubPanelOpen] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
   const [submittedData, setSubmittedData] = useState(null);
+
+  // the formik instance tracks `isSubmitting` automatically, which corresponds
+  // to the async submission defined in `useDisputeForm`.  we don't need a second
+  // mutation slice in this component.
 
   const handleFileSelect = useCallback((f) => {
     if (!f || f.type !== "application/pdf") return alert("Please upload a PDF file.");
     setFile(f);
   }, []);
 
-  const formik = useDisputeForm(file, (data) => {
-    setSubmittedData(data);
-    setSubmitted(true);
+  // pass `file` for future use and provide a callback that receives the UI-friendly
+  // data (including `ref` from the server).  We ignore the other args here.
+  const formik = useDisputeForm(file, (uiData) => {
+    setSubmittedData(uiData);
   });
 
   const toggleReason = (id) => {
@@ -50,16 +55,15 @@ export default function MainContent() {
   const handleCloseModal = () => {
     formik.resetForm();
     setFile(null);
-    setSubmitted(false);
-    setSubmittedData(null);
     setSubPanelOpen(false);
+    setSubmittedData(null);
   };
 
   return (
     <div className="page-shell">
       <div className="fixed inset-0 pointer-events-none z-0 bg-radial-glow" />
 
-      {submitted && submittedData && (
+      {submittedData && (
         <Success_Form
           refNumber={submittedData.ref}
           reasons={submittedData.reasons}
@@ -71,6 +75,7 @@ export default function MainContent() {
 
       <div className="page-content">
         <main className="page-main">
+
           {/* Hero */}
           <div className="hero">
             <div className="hero-eyebrow">Land Tax Dispute</div>
@@ -89,6 +94,7 @@ export default function MainContent() {
             <div className="absolute top-0 left-0 right-0 h-0.5 gold-top-line" />
 
             <form onSubmit={formik.handleSubmit} noValidate>
+
               {/* Dropzone */}
               <Dropzone
                 dragOver={dragOver}
@@ -241,7 +247,7 @@ export default function MainContent() {
                 )}
               </div>
 
-                           {/* Additional Notes */}
+              {/* Additional Notes */}
               <FieldWrapper label="Additional Notes" optional>
                 <textarea
                   name="addNotes"
@@ -253,17 +259,16 @@ export default function MainContent() {
                 />
               </FieldWrapper>
 
-              {/* Submit button */}
+              {/* Submit */}
               <button
                 type="submit"
-                disabled={!file || !formik.isValid}
+                disabled={!file || !formik.isValid || formik.isSubmitting}
                 className="btn-gold-gradient btn-submit"
               >
                 <SendIcon />
-                Submit Dispute Application
+                {formik.isSubmitting ? "Submitting…" : "Submit Dispute Application"}
               </button>
 
-              {/* Hint message if disabled */}
               {(!file || !formik.isValid) && (
                 <p className="btn-submit-hint">
                   {!file
@@ -271,8 +276,10 @@ export default function MainContent() {
                     : "Please fill in all required fields to continue"}
                 </p>
               )}
+
             </form>
           </div>
+
         </main>
       </div>
     </div>

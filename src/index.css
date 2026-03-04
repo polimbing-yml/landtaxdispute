@@ -1,9 +1,9 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,700&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500;600&display=swap');
 @import "tailwindcss";
 
 /* ─── Google Fonts ──────────────────────────────────────────────────────────
    Loaded here so no component needs a <style> tag or inline @import.
    ─────────────────────────────────────────────────────────────────────────── */
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,700&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500;600&display=swap');
 
 /* ─── Font Family Overrides ─────────────────────────────────────────────────
    Tailwind's font-serif / font-mono / font-sans default to system stacks.

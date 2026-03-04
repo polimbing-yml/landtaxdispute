@@ -1,1 +1,745 @@
 @import "tailwindcss";
+
+/* ─── Google Fonts ──────────────────────────────────────────────────────────
+   Loaded here so no component needs a <style> tag or inline @import.
+   ─────────────────────────────────────────────────────────────────────────── */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,700&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500;600&display=swap');
+
+/* ─── Font Family Overrides ─────────────────────────────────────────────────
+   Tailwind's font-serif / font-mono / font-sans default to system stacks.
+   Overriding here avoids a tailwind.config.js change.
+   ─────────────────────────────────────────────────────────────────────────── */
+.font-serif { font-family: 'Playfair Display', serif; }
+.font-mono  { font-family: 'DM Mono', monospace; }
+.font-sans  { font-family: 'DM Sans', sans-serif; }
+
+/* ─── Global Body ────────────────────────────────────────────────────────── */
+body { background: #0d1b2a; }
+
+/* ─── Keyframes ─────────────────────────────────────────────────────────────
+   Must live in a stylesheet — cannot be authored inside a Tailwind class.
+   ─────────────────────────────────────────────────────────────────────────── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(22px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+@keyframes modalBackdrop {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes modalPanel {
+  from { opacity: 0; transform: translateY(16px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   ANIMATIONS
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.animate-fade-up         { animation: fadeUp 0.7s ease both; }
+.animate-fade-up-delayed { animation: fadeUp 0.7s 0.15s ease both; }
+.animate-fade-up-success { animation: fadeUp 0.5s ease both; }
+
+.animate-modal-backdrop {
+  background: rgba(8, 16, 26, 0.75);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  animation: modalBackdrop 0.2s ease both;
+}
+.animate-modal-panel {
+  animation: modalPanel 0.25s 0.05s cubic-bezier(0.34, 1.2, 0.64, 1) both;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   PAGE SHELL  ·  Main_Content root wrapper
+   was: font-sans bg-[#0d1b2a] min-h-screen text-[#faf8f3] overflow-x-hidden relative
+   ═══════════════════════════════════════════════════════════════════════════ */
+.page-shell {
+  font-family: 'DM Sans', sans-serif;
+  background: #0d1b2a;
+  min-height: 100vh;
+  color: #faf8f3;
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* Two-layer radial glow. Tailwind arbitrary values support only one
+   gradient layer per background property. */
+.bg-radial-glow {
+  background:
+    radial-gradient(ellipse at 20% 20%, rgba(201, 168, 76, 0.07) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 80%, rgba(201, 168, 76, 0.05) 0%, transparent 50%);
+}
+
+/* was: relative z-10 flex flex-col min-h-screen */
+.page-content {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* was: flex-1 flex flex-col items-center px-5 py-14 */
+.page-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 56px 20px;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   HERO
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* was: text-center max-w-[600px] mb-11 animate-fade-up */
+.hero {
+  text-align: center;
+  max-width: 600px;
+  margin-bottom: 44px;
+  animation: fadeUp 0.7s ease both;
+}
+
+/* was: font-mono text-[11px] uppercase tracking-[3px] text-[#c9a84c] mb-4 */
+.hero-eyebrow {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  color: #c9a84c;
+  margin-bottom: 16px;
+}
+
+/* was: font-serif text-[clamp(28px,5vw,48px)] font-bold leading-[1.15] text-white mb-3 */
+.hero-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(28px, 5vw, 48px);
+  font-weight: 700;
+  line-height: 1.15;
+  color: white;
+  margin-bottom: 12px;
+}
+
+/* was: text-[15px] font-light text-[#8a9bb0] leading-[1.7] max-w-[440px] mx-auto */
+.hero-body {
+  font-size: 15px;
+  font-weight: 300;
+  color: #8a9bb0;
+  line-height: 1.7;
+  max-width: 440px;
+  margin: 0 auto;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   FORM CARD
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* was: bg-[#1a2f45] border border-[#c9a84c]/[0.18] rounded-[20px] p-11
+        w-full max-w-[640px] relative overflow-hidden animate-fade-up-delayed */
+.form-card {
+  background: #1a2f45;
+  border: 1px solid rgba(201, 168, 76, 0.18);
+  border-radius: 20px;
+  padding: 44px;
+  width: 100%;
+  max-width: 640px;
+  position: relative;
+  overflow: hidden;
+  animation: fadeUp 0.7s 0.15s ease both;
+}
+
+/* Gold accent bar — linear-gradient on background, not on a border.
+   Tailwind cannot apply a gradient to a CSS border property. */
+.gold-top-line {
+  background: linear-gradient(90deg, transparent, #c9a84c, transparent);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   SECTION DIVIDER
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* was: flex items-center gap-3 my-6 */
+.form-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 24px 0;
+}
+/* was: flex-1 h-px bg-white/[0.08] */
+.form-divider-line {
+  flex: 1;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.08);
+}
+/* was: font-mono text-[11px] text-[#8a9bb0] uppercase tracking-widest whitespace-nowrap */
+.form-divider-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  color: #8a9bb0;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  white-space: nowrap;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   FIELD WRAPPER
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.field-group { margin-bottom: 16px; }  /* was: mb-4 */
+
+/* was: block font-mono text-[11px] uppercase tracking-widest text-[#c9a84c] mb-2 */
+.field-label {
+  display: block;
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #c9a84c;
+  margin-bottom: 8px;
+}
+/* was: text-[#8a9bb0] normal-case tracking-normal text-[11px] font-sans font-light ml-1 */
+.field-label-optional {
+  color: #8a9bb0;
+  text-transform: none;
+  letter-spacing: normal;
+  font-size: 11px;
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 300;
+  margin-left: 4px;
+}
+/* was: mt-1.5 text-[11px] font-mono text-[#e05c5c] */
+.field-error {
+  margin-top: 6px;
+  font-size: 11px;
+  font-family: 'DM Mono', monospace;
+  color: #e05c5c;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   INPUTS & SELECTS
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* was: w-full bg-white/[0.04] border border-white/10 rounded-[10px] px-[15px] py-3
+        font-sans text-sm text-white outline-none transition-all duration-200
+        placeholder-[#8a9bb0]/50 focus:border-[#c9a84c]/50 focus:bg-[#c9a84c]/[0.04] */
+.input-base {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  padding: 12px 15px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  color: white;
+  outline: none;
+  transition: border-color 0.2s, background 0.2s;
+}
+.input-base::placeholder { color: rgba(138, 155, 176, 0.5); }
+.input-base:focus {
+  border-color: rgba(201, 168, 76, 0.5);
+  background: rgba(201, 168, 76, 0.04);
+}
+/* textarea extends input-base: resize-y min-h-[78px] leading-relaxed */
+.input-textarea {
+  resize: vertical;
+  min-height: 78px;
+  line-height: 1.6;
+}
+
+/* was: w-full bg-[#0d1b2a] border border-white/10 rounded-[10px] px-[15px] py-3
+        font-mono text-sm text-white outline-none transition-all duration-200
+        focus:border-[#c9a84c]/50 appearance-none cursor-pointer */
+.select-base {
+  width: 100%;
+  background: #0d1b2a;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  padding: 12px 15px;
+  font-family: 'DM Mono', monospace;
+  font-size: 14px;
+  color: white;
+  outline: none;
+  transition: border-color 0.2s;
+  appearance: none;
+  cursor: pointer;
+}
+.select-base:focus { border-color: rgba(201, 168, 76, 0.5); }
+
+/* SVG data-URI chevron — no Tailwind utility covers bg-image + bg-position */
+.select-arrow {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23c9a84c' stroke-width='2' stroke-linecap='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 36px !important;
+}
+select option { background: #0d1b2a; color: white; }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   CUSTOM CHECKBOX
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* was: flex items-start gap-3 cursor-pointer transition-colors duration-150
+        hover:text-white  (+ text-[14px] text-[#faf8f3] for default) */
+.checkbox-label {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  cursor: pointer;
+  transition: color 0.15s;
+  font-size: 14px;
+  color: #faf8f3;
+}
+.checkbox-label:hover { color: white; }
+/* sub variant: text-[13px] text-[#8a9bb0] */
+.checkbox-label--sub { font-size: 13px; color: #8a9bb0; }
+
+/* was: flex-shrink-0 mt-0.5 flex items-center justify-center rounded-[5px]
+        transition-all duration-200  w-5 h-5 border-2  bg-white/[0.03] border-[#c9a84c]/40 */
+.checkbox-box {
+  flex-shrink: 0;
+  margin-top: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 5px;
+  transition: background 0.2s, border-color 0.2s;
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(201, 168, 76, 0.4);
+  background: rgba(255, 255, 255, 0.03);
+}
+.checkbox-box--sub     { width: 17px; height: 17px; border-width: 1.5px; }
+.checkbox-box--checked { background: #c9a84c; border-color: #c9a84c; }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   DROPZONE
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* was: border-2 border-dashed rounded-[14px] p-11 text-center cursor-pointer
+        relative transition-all duration-200 bg-white/[0.02] border-[#c9a84c]/35 */
+.dropzone {
+  border: 2px dashed rgba(201, 168, 76, 0.35);
+  border-radius: 14px;
+  padding: 44px;
+  text-align: center;
+  cursor: pointer;
+  position: relative;
+  transition: border-color 0.2s, background 0.2s, transform 0.2s;
+  background: rgba(255, 255, 255, 0.02);
+}
+/* hover + dragOver: border-[#c9a84c] bg-[#c9a84c]/[0.05] -translate-y-0.5 */
+.dropzone:hover,
+.dropzone--active {
+  border-color: #c9a84c;
+  background: rgba(201, 168, 76, 0.05);
+  transform: translateY(-2px);
+}
+
+/* was: size-14 mx-auto mb-4 rounded-full flex items-center justify-center
+        transition-all duration-200  default bg-[#c9a84c]/10 */
+.dropzone-icon-wrap {
+  width: 56px;
+  height: 56px;
+  margin: 0 auto 16px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s, transform 0.2s;
+  background: rgba(201, 168, 76, 0.1);
+}
+/* dragOver: bg-[#c9a84c]/20 scale-105 */
+.dropzone-icon-wrap--active {
+  background: rgba(201, 168, 76, 0.2);
+  transform: scale(1.05);
+}
+
+/* was: font-serif text-[18px] font-semibold text-white mb-1.5 */
+.dropzone-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 18px;
+  font-weight: 600;
+  color: white;
+  margin-bottom: 6px;
+}
+/* was: text-[13px] text-[#8a9bb0] mb-3 */
+.dropzone-hint { font-size: 13px; color: #8a9bb0; margin-bottom: 12px; }
+
+/* was: inline-block bg-[#c9a84c]/[0.12] border border-[#c9a84c]/30 text-[#c9a84c]
+        font-mono text-[10px] tracking-wide px-3 py-1 rounded-full */
+.dropzone-badge {
+  display: inline-block;
+  background: rgba(201, 168, 76, 0.12);
+  border: 1px solid rgba(201, 168, 76, 0.3);
+  color: #c9a84c;
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.05em;
+  padding: 4px 12px;
+  border-radius: 9999px;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   FILE PREVIEW ROW
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* was: flex items-center gap-3 bg-[#c9a84c]/[0.07] border border-[#c9a84c]/25
+        rounded-[10px] px-4 py-3 mt-3 */
+.file-preview {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: rgba(201, 168, 76, 0.07);
+  border: 1px solid rgba(201, 168, 76, 0.25);
+  border-radius: 10px;
+  padding: 12px 16px;
+  margin-top: 12px;
+}
+
+/* was: w-9 h-9 bg-[#c9a84c]/[0.15] rounded-[7px]
+        flex items-center justify-center flex-shrink-0 */
+.file-preview-icon {
+  width: 36px;
+  height: 36px;
+  background: rgba(201, 168, 76, 0.15);
+  border-radius: 7px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+/* was: text-[13px] font-medium text-white truncate */
+.file-preview-name {
+  font-size: 13px;
+  font-weight: 500;
+  color: white;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+/* was: font-mono text-[10px] text-[#8a9bb0] mt-0.5 */
+.file-preview-meta {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  color: #8a9bb0;
+  margin-top: 2px;
+}
+/* was: text-[#8a9bb0] hover:text-[#e05c5c] p-1 rounded transition-colors */
+.file-preview-remove {
+  color: #8a9bb0;
+  padding: 4px;
+  border-radius: 4px;
+  transition: color 0.2s;
+  background: none;
+  border: none;
+  cursor: pointer;
+  line-height: 0;
+}
+.file-preview-remove:hover { color: #e05c5c; }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   DIRECTOR INFO NOTE
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* was: flex items-start gap-2.5 bg-[#c9a84c]/[0.06] border border-[#c9a84c]/20
+        rounded-[10px] px-4 py-3 mt-1 mb-4 text-[12px] text-[#8a9bb0] leading-relaxed */
+.info-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  background: rgba(201, 168, 76, 0.06);
+  border: 1px solid rgba(201, 168, 76, 0.2);
+  border-radius: 10px;
+  padding: 12px 16px;
+  margin-top: 4px;
+  margin-bottom: 16px;
+  font-size: 12px;
+  color: #8a9bb0;
+  line-height: 1.6;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   CHECKBOX GROUPS
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* was: bg-white/[0.02] border border-white/[0.08] rounded-[12px] px-5 py-[18px] */
+.checkbox-group {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 18px 20px;
+}
+/* was: mt-3 ml-8 bg-[#c9a84c]/[0.04] border border-[#c9a84c]/[0.14]
+        rounded-[10px] px-4 py-3.5 */
+.sub-panel {
+  margin-top: 12px;
+  margin-left: 32px;
+  background: rgba(201, 168, 76, 0.04);
+  border: 1px solid rgba(201, 168, 76, 0.14);
+  border-radius: 10px;
+  padding: 14px 16px;
+}
+/* was: font-mono text-[10px] uppercase tracking-widest text-[#c9a84c] mb-3 */
+.sub-panel-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #c9a84c;
+  margin-bottom: 12px;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   SUBMIT BUTTON
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* 135deg angle intentional — Tailwind only supports directional keywords */
+.btn-gold-gradient { background: linear-gradient(135deg, #c9a84c, #e8c878); }
+
+/* was: btn-gold-gradient w-full py-[15px] rounded-[12px] font-sans text-[15px]
+        font-semibold text-[#0d1b2a] cursor-pointer transition-all duration-200
+        flex items-center justify-center gap-2.5 mt-1.5
+        disabled:opacity-45 disabled:cursor-not-allowed
+        hover:enabled:-translate-y-0.5 hover:enabled:shadow-[...] */
+.btn-submit {
+  width: 100%;
+  padding: 15px;
+  border-radius: 12px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  color: #0d1b2a;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s, opacity 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 6px;
+  border: none;
+}
+.btn-submit:disabled { opacity: 0.45; cursor: not-allowed; }
+.btn-submit:not(:disabled):hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 28px rgba(201, 168, 76, 0.35);
+}
+/* was: text-center font-mono text-[10px] text-[#8a9bb0] mt-2.5 */
+.btn-submit-hint {
+  text-align: center;
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  color: #8a9bb0;
+  margin-top: 10px;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   MODAL  (shared by SuccessModal in Main_Content + Success_Form.jsx)
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* was: fixed inset-0 z-50 flex items-center justify-center p-4
+        + animate-modal-backdrop styles */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  background: rgba(8, 16, 26, 0.75);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  animation: modalBackdrop 0.2s ease both;
+}
+
+/* was: relative w-full max-w-[560px] bg-[#1a2f45] border border-[#c9a84c]/[0.18]
+        rounded-[20px] px-8 py-10 text-center animate-modal-panel scrollbar-hide */
+.modal-panel {
+  position: relative;
+  width: 100%;
+  max-width: 560px;
+  background: #1a2f45;
+  border: 1px solid rgba(201, 168, 76, 0.18);
+  border-radius: 20px;
+  padding: 40px 32px;
+  text-align: center;
+  animation: modalPanel 0.25s 0.05s cubic-bezier(0.34, 1.2, 0.64, 1) both;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.modal-panel::-webkit-scrollbar { display: none; }
+
+/* was: absolute top-4 right-4 w-8 h-8 flex items-center justify-center
+        rounded-full text-[#8a9bb0] hover:text-white hover:bg-white/[0.08]
+        transition-all duration-150 */
+.modal-close-btn {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  color: #8a9bb0;
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: color 0.15s, background 0.15s;
+  line-height: 0;
+}
+.modal-close-btn:hover { color: white; background: rgba(255, 255, 255, 0.08); }
+
+/* was: w-[74px] h-[74px] mx-auto mb-5 */
+.modal-ring { width: 74px; height: 74px; margin: 0 auto 20px; }
+
+/* was: font-serif text-2xl font-bold text-white mb-3 */
+.modal-heading {
+  font-family: 'Playfair Display', serif;
+  font-size: 24px;
+  font-weight: 700;
+  color: white;
+  margin-bottom: 12px;
+}
+
+/* was: text-sm text-[#8a9bb0] leading-relaxed max-w-[420px] mx-auto mb-5 */
+.modal-description {
+  font-size: 14px;
+  color: #8a9bb0;
+  line-height: 1.6;
+  max-width: 420px;
+  margin: 0 auto 20px;
+}
+
+/* was: bg-[#2a9d5c]/[0.07] border border-[#2a9d5c]/25 rounded-xl px-5 py-4 mb-4
+        flex items-center justify-between flex-wrap gap-3 text-left */
+.modal-ref-box {
+  background: rgba(42, 157, 92, 0.07);
+  border: 1px solid rgba(42, 157, 92, 0.25);
+  border-radius: 12px;
+  padding: 16px 20px;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  text-align: left;
+}
+
+/* was: bg-[#c9a84c]/[0.06] border border-[#c9a84c]/[0.18] rounded-xl
+        px-[18px] py-[14px] mb-4 text-left */
+.modal-grounds-box {
+  background: rgba(201, 168, 76, 0.06);
+  border: 1px solid rgba(201, 168, 76, 0.18);
+  border-radius: 12px;
+  padding: 14px 18px;
+  margin-bottom: 16px;
+  text-align: left;
+}
+
+/* was: bg-[#0d1b2a]/60 border border-[#c9a84c]/25 rounded-xl
+        px-5 py-[18px] mb-4 text-left */
+.modal-director-box {
+  background: rgba(13, 27, 42, 0.6);
+  border: 1px solid rgba(201, 168, 76, 0.25);
+  border-radius: 12px;
+  padding: 18px 20px;
+  margin-bottom: 16px;
+  text-align: left;
+}
+/* was: py-2 flex items-center gap-3 */
+.modal-director-row { padding: 8px 0; display: flex; align-items: center; gap: 12px; }
+.modal-director-row + .modal-director-row {
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+/* was: w-8 h-8 bg-[#c9a84c]/10 rounded-lg flex items-center justify-center flex-shrink-0 */
+.modal-director-icon {
+  width: 32px;
+  height: 32px;
+  background: rgba(201, 168, 76, 0.1);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+/* was: flex justify-center gap-2 flex-wrap mb-2 */
+.modal-pills { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; margin-bottom: 8px; }
+
+/* was: flex items-center gap-1.5 bg-[#c9a84c]/[0.08] border border-[#c9a84c]/20
+        rounded-full px-3 py-1.5 */
+.modal-pill {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(201, 168, 76, 0.08);
+  border: 1px solid rgba(201, 168, 76, 0.2);
+  border-radius: 9999px;
+  padding: 6px 12px;
+}
+/* was: w-1.5 h-1.5 bg-[#c9a84c] rounded-full animate-pulse */
+.modal-pill-dot {
+  width: 6px;
+  height: 6px;
+  background: #c9a84c;
+  border-radius: 50%;
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+/* was: font-mono text-[10px] text-[#c9a84c] */
+.modal-pill-text { font-family: 'DM Mono', monospace; font-size: 10px; color: #c9a84c; }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   SHARED TYPOGRAPHY TOKENS
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* font-mono text-[10px] uppercase tracking-widest text-[#c9a84c]
+   section labels inside cards/boxes */
+.label-gold {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #c9a84c;
+  margin-bottom: 12px;
+}
+/* font-mono text-[10px] uppercase tracking-wide text-[#8a9bb0]
+   sub-labels like "Reference Number", "Director Name" */
+.label-muted {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #8a9bb0;
+  margin-bottom: 2px;
+}
+/* text-[#c9a84c] font-medium  — inline gold highlight span */
+.text-highlight { color: #c9a84c; font-weight: 500; }
+
+/* font-mono text-base font-medium text-[#2a9d5c] tracking-wide */
+.ref-number {
+  font-family: 'DM Mono', monospace;
+  font-size: 16px;
+  font-weight: 500;
+  color: #2a9d5c;
+  letter-spacing: 0.05em;
+}
+/* font-mono text-[13px] font-medium text-[#e8c878] */
+.ref-response {
+  font-family: 'DM Mono', monospace;
+  font-size: 13px;
+  font-weight: 500;
+  color: #e8c878;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   SCROLLBAR HIDE
+   ═══════════════════════════════════════════════════════════════════════════ */
+.scrollbar-hide                    { -ms-overflow-style: none; scrollbar-width: none; }
+.scrollbar-hide::-webkit-scrollbar { display: none; }
